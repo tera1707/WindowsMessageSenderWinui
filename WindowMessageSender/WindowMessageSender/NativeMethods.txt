@@ -1,0 +1,6 @@
+EnumWindows
+GetWindowText
+GetWindowTextLength
+GetClassName
+IsWindowVisible
+PostMessage
