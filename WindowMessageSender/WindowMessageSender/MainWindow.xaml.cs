@@ -1,12 +1,14 @@
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Windows.Graphics;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace WindowMessageSender
 {
@@ -107,7 +109,61 @@ namespace WindowMessageSender
             if (WindowList.SelectedItem is WindowData wd)
             {
                 var msg = UInt32.Parse(tbMsgNumber.Text, System.Globalization.NumberStyles.HexNumber);
-                PInvoke.PostMessage(wd.hWnd, msg, (WPARAM)0, (LPARAM)0);
+                PInvoke.SetForegroundWindow(wd.hWnd);
+
+                //{
+                //    // ALT+F4‚ð‘—‚é
+                //    var inputs = new INPUT[4];
+
+                //    inputs[0].type = INPUT_TYPE.INPUT_KEYBOARD;
+                //    inputs[0].Anonymous.ki.wVk = VIRTUAL_KEY.VK_MENU;
+
+                //    inputs[1].type = INPUT_TYPE.INPUT_KEYBOARD;
+                //    inputs[1].Anonymous.ki.wVk = VIRTUAL_KEY.VK_F4;
+
+                //    inputs[2].type = INPUT_TYPE.INPUT_KEYBOARD;
+                //    inputs[2].Anonymous.ki.wVk = VIRTUAL_KEY.VK_F4;
+                //    inputs[2].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
+                //    inputs[3].type = INPUT_TYPE.INPUT_KEYBOARD;
+                //    inputs[3].Anonymous.ki.wVk = VIRTUAL_KEY.VK_MENU;
+                //    inputs[3].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
+                //    var inputsSpan = new Span<INPUT>(inputs);
+                //    var ret = PInvoke.SendInput(inputsSpan, Marshal.SizeOf<INPUT>());
+                //}
+
+                {
+                    // SHIFT+CTRL+M‚ð‘—‚é
+                    var inputs = new INPUT[6];
+
+                    inputs[0].type = INPUT_TYPE.INPUT_KEYBOARD;
+                    inputs[0].Anonymous.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
+
+                    inputs[1].type = INPUT_TYPE.INPUT_KEYBOARD;
+                    inputs[1].Anonymous.ki.wVk = VIRTUAL_KEY.VK_SHIFT;
+
+                    inputs[2].type = INPUT_TYPE.INPUT_KEYBOARD;
+                    inputs[2].Anonymous.ki.wVk = VIRTUAL_KEY.VK_M;
+
+                    inputs[3].type = INPUT_TYPE.INPUT_KEYBOARD;
+                    inputs[3].Anonymous.ki.wVk = VIRTUAL_KEY.VK_M;
+                    inputs[3].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
+                    inputs[4].type = INPUT_TYPE.INPUT_KEYBOARD;
+                    inputs[4].Anonymous.ki.wVk = VIRTUAL_KEY.VK_SHIFT;
+                    inputs[4].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
+                    inputs[5].type = INPUT_TYPE.INPUT_KEYBOARD;
+                    inputs[5].Anonymous.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
+                    inputs[5].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
+                    var inputsSpan = new Span<INPUT>(inputs);
+                    var ret = PInvoke.SendInput(inputsSpan, Marshal.SizeOf<INPUT>());
+                }
+
+
+                //PInvoke.PostMessage(wd.hWnd, msg, (WPARAM)0, (LPARAM)0);
             }
         }
     }
