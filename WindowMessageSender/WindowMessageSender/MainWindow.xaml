@@ -22,10 +22,18 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" x:Name="myButton" Grid.Row="0" Click="myButton_Click" HorizontalAlignment="Stretch" Margin="5" Background="Blue">ウインドウを探す</Button>
-            <ToggleSwitch Grid.Column="1" x:Name="VisibleOnly" IsOn="False" OffContent="可視ウインドウのみ表示" OnContent="不可視ウインドウも表示"/>
-        </Grid>        
+            <ToggleSwitch Grid.Column="1" x:Name="VisibleOnly" IsOn="False" OffContent="可視ウインドウのみ表示" OnContent="不可視ウインドウも表示" Margin="5"/>
+        </Grid>
 
         <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -33,16 +41,38 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <HyperlinkButton Content="WMメッセージ番号を調べる" NavigateUri="https://blog.goo.ne.jp/masaki_goo_2006/e/65fe9047e5f97bde1830566766b4829e"/>
-            <TextBlock Grid.Column="1" Text="0x" VerticalAlignment="Center" FontSize="25"/>
-            <TextBox Grid.Column="2" x:Name="tbMsgNumber" TextAlignment="Left" Text="0010" FontSize="30"/>
-            <Button Grid.Column="3" Content="メッセージ送信" Click="Button_Click" Background="DarkCyan" HorizontalAlignment="Stretch"/>
+            <HyperlinkButton Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Content="WMメッセージ番号を調べる" NavigateUri="https://blog.goo.ne.jp/masaki_goo_2006/e/65fe9047e5f97bde1830566766b4829e"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Msg" VerticalAlignment="Center" FontSize="25"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="0x" VerticalAlignment="Center" FontSize="25" Margin="10,0"/>
+            <TextBox Grid.Row="1" Grid.Column="2" x:Name="tbMsgNumber" TextAlignment="Left" Text="0010" FontSize="30"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="WPARAM" VerticalAlignment="Center" FontSize="25"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="0x" VerticalAlignment="Center" FontSize="25" Margin="10,0"/>
+            <TextBox Grid.Row="2" Grid.Column="2" x:Name="tbWpNumber" TextAlignment="Left" Text="0010" FontSize="30"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="WPARAM" VerticalAlignment="Center" FontSize="25"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="0x" VerticalAlignment="Center" FontSize="25" Margin="10,0"/>
+            <TextBox Grid.Row="3" Grid.Column="2" x:Name="tbLpNumber" TextAlignment="Left" Text="0010" FontSize="30"/>
+
+            <TextBox x:Name="tbWindowTitleSearch" Grid.Row="4" PlaceholderText="ウインドウタイトル名で検索...." Margin="10" Grid.ColumnSpan="3"/>
+            <TextBox x:Name="tbWindowClassSearch" Grid.Row="5" PlaceholderText="ウインドウクラス名で検索...." Margin="10" Grid.ColumnSpan="3"/>
+
+            <Button Grid.RowSpan="4" Grid.Column="3" Content="メッセージ送信" Click="Button_Click" Background="DarkCyan" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+            <Button Grid.RowSpan="2" Grid.Row="4" Grid.Column="3" Content="検索文字列クリア" Click="Button_Click_1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Background="DarkKhaki" Margin="10"/>
         </Grid>
 
-        <ListView x:Name="WindowList" Grid.Row="2" HorizontalAlignment="Stretch" SelectionMode="Single" ShowsScrollingPlaceholders="True" BorderThickness="1" BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}">
-            <ListView.ItemTemplate>
+        <ListBox x:Name="WindowList" Grid.Row="2" HorizontalAlignment="Stretch" SelectionMode="Single"  BorderThickness="1" BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}" Margin="5">
+            <ListBox.Resources>
+                <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            </ListBox.Resources>
+            <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid BorderBrush="CadetBlue" BorderThickness="1" Margin="1" Padding="7,2">
+                    <Grid BorderBrush="CadetBlue" BorderThickness="1" Margin="0" Padding="5" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
@@ -54,13 +84,24 @@
                             </MenuFlyout>
                         </Grid.ContextFlyout>
 
-                        <TextBlock Grid.Row="0" Text="{Binding Title}"/>
-                        <TextBlock Grid.Row="1" Text="{Binding ClassName}"/>
+                        <!--<TextBlock Grid.Column="0" Grid.RowSpan="2" Text="{Binding local:MainWindow.BoolToVisibility(IsVisible)}" VerticalAlignment="Center" Margin="10"/>-->
+                        <TextBlock Grid.Column="0" Grid.RowSpan="2" Text="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}" VerticalAlignment="Center" Margin="10"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ClassName}"/>
 
                     </Grid>
                 </DataTemplate>
 
-            </ListView.ItemTemplate>
-        </ListView>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="FontSize" Value="15" />
+                    <Setter Property="Padding" Value="1" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </Window>
