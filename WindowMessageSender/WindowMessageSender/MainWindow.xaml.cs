@@ -28,6 +28,8 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
         this.InitializeComponent();
 
+        Title = "好きなウインドウに好きなメッセージを送るツール";
+
         // WinUI3のウインドウのハンドルを取得
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         // そのウインドウのIDを取得
