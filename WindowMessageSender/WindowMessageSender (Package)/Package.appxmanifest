@@ -5,10 +5,12 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap uap3 desktop">
 
   <Identity
-    Name="f0ce286d-7afc-438e-bde7-bab4a32e3815"
+    Name="WindowMessageSender"
     Publisher="CN=masa"
     Version="1.0.0.0" />
 
@@ -42,6 +44,25 @@
         <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
+
+		<Extensions>
+			<uap3:Extension
+                   Category="windows.appExecutionAlias"
+                   Executable="WindowMessageSender\WindowMessageSender.exe"
+                   EntryPoint="Windows.FullTrustApplication">
+				<uap3:AppExecutionAlias>
+					<desktop:ExecutionAlias Alias="WindowMessageSender.exe" />
+				</uap3:AppExecutionAlias>
+			</uap3:Extension>
+
+			<uap:Extension Category="windows.protocol">
+				<uap:Protocol Name="wmsender">
+					<uap:Logo>images\StoreLogo.png</uap:Logo>
+					<uap:DisplayName>WindowMessageSenderURI</uap:DisplayName>
+				</uap:Protocol>
+			</uap:Extension>
+		</Extensions>
+		
     </Application>
   </Applications>
 

@@ -51,7 +51,7 @@
             <TextBlock Grid.Row="2" Grid.Column="1" Text="0x" VerticalAlignment="Center" FontSize="25" Margin="10,0"/>
             <TextBox Grid.Row="2" Grid.Column="2" x:Name="tbWpNumber" TextAlignment="Left" Text="0010" FontSize="30"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="WPARAM" VerticalAlignment="Center" FontSize="25"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="LPARAM" VerticalAlignment="Center" FontSize="25"/>
             <TextBlock Grid.Row="3" Grid.Column="1" Text="0x" VerticalAlignment="Center" FontSize="25" Margin="10,0"/>
             <TextBox Grid.Row="3" Grid.Column="2" x:Name="tbLpNumber" TextAlignment="Left" Text="0010" FontSize="30"/>
 
