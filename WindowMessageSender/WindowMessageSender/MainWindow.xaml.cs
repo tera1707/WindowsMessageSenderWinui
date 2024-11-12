@@ -1,5 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.Graphics;
@@ -19,6 +21,8 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     }
     private ObservableCollection<WindowData> _windowTitle = new();
 
+    private List<Action> navigateActions = new List<Action>();
+
     public MainWindow()
     {
         this.InitializeComponent();
@@ -33,10 +37,15 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
         appWindow.Resize(new SizeInt32(700, 900));
+
+        navigateActions.Add(() => { contentFrame.Navigate(typeof(MainPage), navigateActions, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom }); });
+        navigateActions.Add(() => { contentFrame.Navigate(typeof(PresetPage), navigateActions, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom }); });
+
+
     }
 
     private void Grid_Loaded(object sender, RoutedEventArgs e)
     {
-        contentFrame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom });
+        contentFrame.Navigate(typeof(MainPage), navigateActions, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom });
     }
 }

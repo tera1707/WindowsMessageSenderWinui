@@ -1,6 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -22,10 +24,23 @@ public sealed partial class MainPage : Page
     }
     private ObservableCollection<WindowData> _windowTitle = new();
 
+    private Action navigateActionToMainPage;
+    private Action navigateActionToPresetPage;
 
     public MainPage()
     {
         this.InitializeComponent();
+    }
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+
+        if (e.Parameter is List<Action> navActions)
+        {
+            navigateActionToMainPage = navActions[0];
+            navigateActionToPresetPage = navActions[1];
+        }
     }
 
     private void myButton_Click(object sender, RoutedEventArgs e)
@@ -109,9 +124,16 @@ public sealed partial class MainPage : Page
         }
     }
 
+    // クリアボタン
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
         tbWindowTitleSearch.Text = "";
         tbWindowClassSearch.Text = "";
+    }
+
+    // プリセットボタン
+    private void Button_Click_2(object sender, RoutedEventArgs e)
+    {
+        navigateActionToPresetPage.Invoke();
     }
 }
