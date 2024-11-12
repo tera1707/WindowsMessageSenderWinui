@@ -42,8 +42,7 @@
         <TextBox Grid.Row="1" Grid.Column="2" x:Name="tbWParam" PlaceholderText="Hex..." />
         <TextBox Grid.Row="1" Grid.Column="3" x:Name="tbLParam" PlaceholderText="Hex..." />
         
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Content="追加" Click="Button_Click_1" HorizontalAlignment="Stretch" Background="Blue" Style="{StaticResource ButtonRevealStyle}"/>
-        <Button Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1" Content="削除" Click="Button_Click_2" HorizontalAlignment="Stretch" Background="Red"/>
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Content="入力した内容をメッセージのプリセットに追加" Click="Button_Click_1" HorizontalAlignment="Stretch" Background="Blue"/>
 
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Name"/>
         <TextBlock Grid.Row="4" Grid.Column="1" Text="Msg"/>
@@ -75,7 +74,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="これを使う" Click="Button_Click" HorizontalAlignment="Stretch" Background="Green"/>
-        <Button Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="1" Content="キャンセル" Click="Button_Click_3" HorizontalAlignment="Stretch" Background="OrangeRed"/>
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="1" Content="選択したプリセットを使う" Click="Button_Click" HorizontalAlignment="Stretch" Background="Green"/>
+        <Button Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="選択したプリセットを削除" Click="Button_Click_2" HorizontalAlignment="Stretch" Background="Red"/>
+        <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="1" Content="キャンセル" Click="Button_Click_3" HorizontalAlignment="Stretch" Background="OrangeRed"/>
     </Grid>
 </Page>

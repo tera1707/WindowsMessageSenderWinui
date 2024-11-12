@@ -38,8 +38,8 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
         appWindow.Resize(new SizeInt32(700, 900));
 
-        navigateActions.Add(() => { contentFrame.Navigate(typeof(MainPage), navigateActions, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom }); });
-        navigateActions.Add(() => { contentFrame.Navigate(typeof(PresetPage), navigateActions, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom }); });
+        navigateActions.Add(() => { contentFrame.Navigate(typeof(MainPage), navigateActions, new DrillInNavigationTransitionInfo()); });
+        navigateActions.Add(() => { contentFrame.Navigate(typeof(PresetPage), navigateActions, new DrillInNavigationTransitionInfo()); });
 
 
     }

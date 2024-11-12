@@ -47,7 +47,7 @@ public sealed partial class PresetPage : Page
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        //DeleteAll();
+        DeleteAll();
 
         //var presets = new List<PresetData>();
         var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -124,11 +124,3 @@ public sealed partial class PresetPage : Page
 }
 
 public record PresetData(string Name, int Message, int WParam, int LParam);
-//{
-//    public string Name;
-//    public int Message;
-//    public int WParam;
-//    public int LParam;
-
-//    public PresetData(string name, int msg, int wp, int lp) => (Name, Message, WParam, LParam) = (name, msg, wp, lp);
-//}
