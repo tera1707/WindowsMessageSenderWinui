@@ -24,8 +24,8 @@ public sealed partial class MainPage : Page
     }
     private ObservableCollection<WindowData> _windowTitle = new();
 
-    private Action navigateActionToMainPage;
-    private Action navigateActionToPresetPage;
+    private Action<FromPresetPageToMainPageParameter> navigateActionToMainPage = ((MainWindow)App.CurrentWindow).NavigateToMainPage;
+    private Action navigateActionToPresetPage = ((MainWindow)App.CurrentWindow).NavigateToPresetPage;
 
     public MainPage()
     {
@@ -36,10 +36,11 @@ public sealed partial class MainPage : Page
     {
         base.OnNavigatedTo(e);
 
-        if (e.Parameter is List<Action> navActions)
+        if (e.Parameter is FromPresetPageToMainPageParameter p)
         {
-            navigateActionToMainPage = navActions[0];
-            navigateActionToPresetPage = navActions[1];
+            tbMsgNumber.Text = p.Msg.ToString("x4");
+            tbWpNumber.Text = p.WParam.ToString("x4");
+            tbLpNumber.Text = p.LParam.ToString("x4");
         }
     }
 

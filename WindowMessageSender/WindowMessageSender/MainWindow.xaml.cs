@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using Windows.Graphics;
 
 namespace WindowMessageSender;
@@ -21,7 +22,14 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     }
     private ObservableCollection<WindowData> _windowTitle = new();
 
-    private List<Action> navigateActions = new List<Action>();
+    public void NavigateToMainPage(FromPresetPageToMainPageParameter p)
+    {
+        contentFrame.Navigate(typeof(MainPage), p, new DrillInNavigationTransitionInfo());
+    }
+    public void NavigateToPresetPage()
+    {
+        contentFrame.Navigate(typeof(PresetPage), null, new DrillInNavigationTransitionInfo());
+    }
 
     public MainWindow()
     {
@@ -37,15 +45,12 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
         appWindow.Resize(new SizeInt32(700, 900));
-
-        navigateActions.Add(() => { contentFrame.Navigate(typeof(MainPage), navigateActions, new DrillInNavigationTransitionInfo()); });
-        navigateActions.Add(() => { contentFrame.Navigate(typeof(PresetPage), navigateActions, new DrillInNavigationTransitionInfo()); });
-
-
     }
 
     private void Grid_Loaded(object sender, RoutedEventArgs e)
     {
-        contentFrame.Navigate(typeof(MainPage), navigateActions, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom });
+        contentFrame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom });
     }
 }
+
+

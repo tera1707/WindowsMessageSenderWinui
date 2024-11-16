@@ -13,9 +13,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Windows.Storage;
 
 namespace WindowMessageSender;
 
@@ -26,8 +24,8 @@ public sealed partial class PresetPage : Page
 {
     List<PresetData> presets { get; set; } = new List<PresetData>();
 
-    private Action navigateActionToMainPage;
-    private Action navigateActionToPresetPage;
+    private Action<FromPresetPageToMainPageParameter> navigateActionToMainPage = ((MainWindow)App.CurrentWindow).NavigateToMainPage;
+    private Action navigateActionToPresetPage = ((MainWindow)App.CurrentWindow).NavigateToPresetPage;
 
     public PresetPage()
     {
@@ -37,17 +35,11 @@ public sealed partial class PresetPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-
-        if (e.Parameter is List<Action> navActions)
-        {
-            navigateActionToMainPage = navActions[0];
-            navigateActionToPresetPage = navActions[1];
-        }
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        DeleteAll();
+        //DeleteAll();
 
         //var presets = new List<PresetData>();
         var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -55,11 +47,12 @@ public sealed partial class PresetPage : Page
         if (localSettings is not null)
         {
             // 項目名、メッセージ番号、WParam、LParamで4項目なので、4で割ったら行数になる
-            var rowsCount = localSettings.Values.Count / 4;
+            var rowsCount = localSettings.Values.Count;
 
-            for (int i = 0; i < rowsCount; i++)
+            foreach (var val in localSettings.Values.OrderBy(x => x.Key))
             {
-                presets.Add(new PresetData((string)localSettings.Values[$"Name{i}"], (int)localSettings.Values[$"Message{i}"], (int)localSettings.Values[$"WParam{i}"], (int)localSettings.Values[$"LParam{i}"]));
+                var v = (ApplicationDataCompositeValue)localSettings.Values[val.Key];
+                presets.Add(new PresetData((string)v["Name"], (int)v["Message"], (int)v["WParam"], (int)v["LParam"]));
             }
             lbPreset.ItemsSource = presets;
         }
@@ -68,8 +61,9 @@ public sealed partial class PresetPage : Page
     // 「これを使う」ボタン
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
+        var selectedItem = presets[lbPreset.SelectedIndex];
+        var p = new FromPresetPageToMainPageParameter(selectedItem.Message, selectedItem.WParam, selectedItem.LParam);
+        navigateActionToMainPage.Invoke(p);
     }
 
     // 「追加」ボタン
@@ -80,13 +74,18 @@ public sealed partial class PresetPage : Page
         var wpToAdd = Convert.ToInt32(tbWParam.Text, 16);
         var lpToAdd = Convert.ToInt32(tbLParam.Text, 16);
 
-        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        var rowsCount = localSettings.Values.Count / 4;// 設定の件数
+        var localSettings = ApplicationData.Current.LocalSettings;
+        var rowsCount = localSettings.Values.Count;// 設定の件数
 
-        localSettings.Values[$"Name{rowsCount}"] = nameToAdd;
-        localSettings.Values[$"Message{rowsCount}"] = msgToAdd;
-        localSettings.Values[$"WParam{rowsCount}"] = wpToAdd;
-        localSettings.Values[$"LParam{rowsCount}"] = lpToAdd;
+        var v = new ApplicationDataCompositeValue();
+        v["Name"] = nameToAdd;
+        v["Message"] = msgToAdd;
+        v["WParam"] = wpToAdd;
+        v["LParam"] = lpToAdd;
+
+        // 現在の最大Index+1をキーにした項目を追加してやる（追加した項目の並び順が一番最後になるように）
+        var maxIndex = ApplicationData.Current.LocalSettings.Values.Count > 0 ? ApplicationData.Current.LocalSettings.Values.Select(x => int.Parse(x.Key)).Max() : 0;
+        localSettings.Values.Add((maxIndex + 1).ToString(), v);
 
         presets.Add(new PresetData(nameToAdd, msgToAdd, wpToAdd, lpToAdd));
         lbPreset.ItemsSource = new List<PresetData>(presets);// ListをnewしなおさないとListBoxが更新してくれない
@@ -99,10 +98,12 @@ public sealed partial class PresetPage : Page
 
         var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-        localSettings.Values.Remove($"Name{selectedIndex}");
-        localSettings.Values.Remove($"Message{selectedIndex}");
-        localSettings.Values.Remove($"WParam{selectedIndex}");
-        localSettings.Values.Remove($"LParam{selectedIndex}");
+        var target = GetKeyAt(selectedIndex);
+
+        if (target is not null)
+        {
+            localSettings.Values.Remove(target);
+        }
 
         presets.RemoveAt(selectedIndex);
         lbPreset.ItemsSource = new List<PresetData>(presets);
@@ -111,7 +112,7 @@ public sealed partial class PresetPage : Page
     // 「キャンセル」ボタン
     private void Button_Click_3(object sender, RoutedEventArgs e)
     {
-        navigateActionToMainPage.Invoke();
+        navigateActionToMainPage.Invoke(null);
     }
 
     private void DeleteAll()
@@ -121,6 +122,19 @@ public sealed partial class PresetPage : Page
             Windows.Storage.ApplicationData.Current.LocalSettings.Values.Remove(v.Key);
         }
     }
+
+    private string? GetKeyAt(int index)
+    {
+        int i = 0;
+        foreach (var v in Windows.Storage.ApplicationData.Current.LocalSettings.Values.OrderBy(x => x.Key))
+        {
+            if (i == index)
+            {
+                return v.Key;
+            }
+            i++;
+        }
+        return null;
+    }
 }
 
-public record PresetData(string Name, int Message, int WParam, int LParam);
