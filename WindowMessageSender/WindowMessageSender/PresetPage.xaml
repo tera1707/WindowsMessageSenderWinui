@@ -13,6 +13,7 @@
     Name="root">
     <Page.Resources>
         <SolidColorBrush x:Key="ListBoxItemBackgroundPointerOver">Red</SolidColorBrush>
+        <local:IntToHexStringConverter x:Key="IntToHexStringConverter"/>
     </Page.Resources>
 
     <Grid Margin="5">
@@ -66,9 +67,9 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="{Binding Name}" Grid.Column="0"/>
-                        <TextBlock Text="{Binding Message}" Grid.Column="1"/>
-                        <TextBlock Text="{Binding WParam}" Grid.Column="2"/>
-                        <TextBlock Text="{Binding LParam}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Message, Converter={StaticResource IntToHexStringConverter}, ConverterParameter=4}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding WParam, Converter={StaticResource IntToHexStringConverter}, ConverterParameter=4}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding LParam, Converter={StaticResource IntToHexStringConverter}, ConverterParameter=4}" Grid.Column="3"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
