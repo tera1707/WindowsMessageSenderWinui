@@ -15,5 +15,14 @@
     <windowsSettings>
       <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
     </windowsSettings>
+	  <windowsSettings xmlns="http://schemas.microsoft.com/SMI/2011/WindowsSettings">
+		  <disableWindowFiltering>true</disableWindowFiltering>
+	  </windowsSettings>
   </application>
+  <application>
+    <windowsSettings xmlns="http://schemas.microsoft.com/SMI/2011/WindowsSettings">
+      <disableWindowFiltering>true</disableWindowFiltering>
+    </windowsSettings>
+  </application>
+
 </assembly>

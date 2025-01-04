@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace WindowMessageSender;
 
@@ -48,64 +49,78 @@ public sealed partial class MainPage : Page
     {
         WindowTitle.Clear();
 
-        string windowName;
-        string windoClass;
-
-        PInvoke.EnumWindows(((hWnd, param) =>
-        {
-            int bufferSize = PInvoke.GetWindowTextLength(hWnd) + 1;
-            unsafe
-            {
-                var isVisible = PInvoke.IsWindowVisible(hWnd);
-
-                fixed (char* windowNameChars = new char[bufferSize])
-                {
-                    if (PInvoke.GetWindowText(hWnd, windowNameChars, bufferSize) == 0)
-                    {
-                        int errorCode = Marshal.GetLastWin32Error();
-                        if (errorCode != 0)
-                            throw new Win32Exception(errorCode);
-
-                        return true;
-                    }
-
-                    windowName = new string(windowNameChars);
-                }
-
-                fixed (char* windoClassChars = new char[256])
-                {
-                    if (PInvoke.GetClassName(hWnd, windoClassChars, 256) == 0)
-                    {
-                        int errorCode = Marshal.GetLastWin32Error();
-                        if (errorCode != 0)
-                            throw new Win32Exception(errorCode);
-
-                        return true;
-                    }
-
-                    windoClass = new string(windoClassChars);
-                }
-
-                // 検索ワードが入力されてて、ヒットしなかったら追加しない
-                if (!string.IsNullOrEmpty(tbWindowTitleSearch.Text) && !windowName.Contains(tbWindowTitleSearch.Text))
-                    return true;
-                if (!string.IsNullOrEmpty(tbWindowClassSearch.Text) && !windoClass.Contains(tbWindowClassSearch.Text))
-                    return true;
-
-                if (VisibleOnly.IsOn)
-                {
-                    WindowTitle.Add(new WindowData(hWnd, windowName, windoClass, isVisible));
-                }
-                else if (isVisible == true)
-                {
-                    WindowTitle.Add(new WindowData(hWnd, windowName, windoClass, isVisible));
-                }
-
-                return true;
-            }
-        }), (LPARAM)0);
+        //WNDENUMPROC
+        PInvoke.EnumWindows(OnFindWindows, (LPARAM)0);
 
         WindowList.ItemsSource = WindowTitle;
+    }
+
+    private Windows.Win32.Foundation.BOOL OnFindWindows(Windows.Win32.Foundation.HWND hWnd, Windows.Win32.Foundation.LPARAM lp)
+    {
+        int lpInt = (int)lp;
+        string space = "";
+
+        string windowName;
+        string windoClass;
+        int bufferSize = PInvoke.GetWindowTextLength(hWnd) + 1;
+        unsafe
+        {
+            var isVisible = PInvoke.IsWindowVisible(hWnd);
+
+            fixed (char* windowNameChars = new char[bufferSize])
+            {
+                if (PInvoke.GetWindowText(hWnd, windowNameChars, bufferSize) == 0)
+                {
+                    int errorCode = Marshal.GetLastWin32Error();
+                    if (errorCode != 0)
+                        throw new Win32Exception(errorCode);
+
+                    return true;
+                }
+
+                windowName = new string(windowNameChars);
+            }
+
+            fixed (char* windoClassChars = new char[256])
+            {
+                if (PInvoke.GetClassName(hWnd, windoClassChars, 256) == 0)
+                {
+                    int errorCode = Marshal.GetLastWin32Error();
+                    if (errorCode != 0)
+                        throw new Win32Exception(errorCode);
+
+                    return true;
+                }
+
+                windoClass = new string(windoClassChars);
+            }
+
+            for (int i = 0; i < lpInt; i++)
+            {
+                space += "　";
+            }
+            windowName = space + windowName;
+            windoClass = space + windoClass;
+
+            // 検索ワードが入力されてて、ヒットしなかったら追加しない
+            if (!string.IsNullOrEmpty(tbWindowTitleSearch.Text) && !windowName.Contains(tbWindowTitleSearch.Text))
+                return true;
+            if (!string.IsNullOrEmpty(tbWindowClassSearch.Text) && !windoClass.Contains(tbWindowClassSearch.Text))
+                return true;
+
+            if (VisibleOnly.IsOn)
+            {
+                WindowTitle.Add(new WindowData(hWnd, windowName, windoClass, isVisible));
+            }
+            else if (isVisible == true)
+            {
+                WindowTitle.Add(new WindowData(hWnd, windowName, windoClass, isVisible));
+            }
+
+            PInvoke.EnumChildWindows(hWnd, OnFindWindows, lpInt + 1);
+
+            return true;
+        }
     }
 
     private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
