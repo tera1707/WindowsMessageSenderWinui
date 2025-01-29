@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "WindowMessageSender (Package)", "WindowMessageSender\WindowMessageSender (Package)\WindowMessageSender (Package).wapproj", "{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowMessageSender", "WindowMessageSender\WindowMessageSender\WindowMessageSender.csproj", "{6AE4B330-F2DC-45D4-BFD7-E6D3C4FA965B}"
 EndProject
 Global
@@ -13,12 +11,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}.Debug|x64.ActiveCfg = Debug|x64
-		{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}.Debug|x64.Build.0 = Debug|x64
-		{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}.Debug|x64.Deploy.0 = Debug|x64
-		{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}.Release|x64.ActiveCfg = Release|x64
-		{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}.Release|x64.Build.0 = Release|x64
-		{F8B12609-BF5F-4AF5-B7AC-2F878CF8EBE9}.Release|x64.Deploy.0 = Release|x64
 		{6AE4B330-F2DC-45D4-BFD7-E6D3C4FA965B}.Debug|x64.ActiveCfg = Debug|x64
 		{6AE4B330-F2DC-45D4-BFD7-E6D3C4FA965B}.Debug|x64.Build.0 = Debug|x64
 		{6AE4B330-F2DC-45D4-BFD7-E6D3C4FA965B}.Release|x64.ActiveCfg = Release|x64
