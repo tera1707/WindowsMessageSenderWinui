@@ -2,5 +2,3 @@
 
 ![](Image/img.bmp)
 
-![](Image/imgPreset.bmp)
-
