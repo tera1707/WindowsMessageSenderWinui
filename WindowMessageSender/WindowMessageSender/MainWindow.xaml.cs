@@ -37,14 +37,8 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
         Title = "好きなウインドウに好きなメッセージを送るツール";
 
-        // WinUI3のウインドウのハンドルを取得
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        // そのウインドウのIDを取得
-        Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-        // そこからAppWindowを取得する
-        Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-        appWindow.Resize(new SizeInt32(700, 900));
+        this.AppWindow.SetIcon("icon.ico");
+        this.AppWindow.Resize(new SizeInt32(700, 900));
     }
 
     private void Grid_Loaded(object sender, RoutedEventArgs e)
